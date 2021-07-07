@@ -1,5 +1,7 @@
 using BancoApi.Data;
 using BancoApi.Domain;
+using BancoApi.Message;
+using BancoApi.Message.Send;
 using BancoApi.Service.Command;
 using BancoApi.Service.Query;
 using MediatR;
@@ -31,9 +33,13 @@ namespace BancoApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BancoApi", Version = "v1" });
             });
+            
+            services.Configure<RabbitMqConfiguration>(Configuration.GetSection("RabbitMq"));
             services.AddMediatR(typeof(Startup));
             services.AddInfraDataIoC();
-            services.AddTransient<IRequestHandler<CreateBancoCommand, Banco>, CreateBancoCommandHandle>();
+
+            services.AddTransient<IBancoCreateSender, BancoCreateSender>();
+            services.AddTransient<IRequestHandler<CreateBancoMessageCommand, Unit>,CreateBancoMessageHandle>();
             services.AddTransient<IRequestHandler<GetBancoByIdQuery, Banco>, GetBancoByIdQueryHandle>();
             services.AddTransient<IRequestHandler<GetBancoAllQuery, List<Banco>>, GetBancoAllQueryHandle>();
 
