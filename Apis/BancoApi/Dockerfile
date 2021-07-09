@@ -8,6 +8,11 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY ["Apis/BancoApi/BancoApi.csproj", "Apis/BancoApi/"]
+COPY ["BancoApi/BancoApi.Data.csproj", "BancoApi/"]
+COPY ["BancoApi/BancoApi.Domain.csproj", "BancoApi/"]
+COPY ["BancoApi/BancoApi.Service.csproj", "BancoApi/"]
+
+
 RUN dotnet restore "Apis/BancoApi/BancoApi.csproj"
 COPY . .
 WORKDIR "/src/Apis/BancoApi"

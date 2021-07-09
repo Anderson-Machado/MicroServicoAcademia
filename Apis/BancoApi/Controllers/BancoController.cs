@@ -77,7 +77,7 @@ namespace BancoApi.Controllers
                     Bancos = banco
                 });
 
-                return Ok(banco);
+                return Created("",banco);
             }
             catch (Exception ex)
             {
