@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 
 namespace BancoApi.Service.Send
 {
@@ -17,46 +18,67 @@ namespace BancoApi.Service.Send
         private readonly string _queueName;
         private readonly string _username;
         private IConnection _connection;
+        private readonly ILogger<BancoCreateSender> _logger;
 
-        public BancoCreateSender(IOptions<RabbitMqConfiguration> rabbitMqOptions)
+        public BancoCreateSender(IOptions<RabbitMqConfiguration> rabbitMqOptions, ILogger<BancoCreateSender> logger)
         {
             _queueName = "BancoQueue"; //rabbitMqOptions.Value.QueueName;
-            _hostname = rabbitMqOptions.Value.Hostname;
-            _username = rabbitMqOptions.Value.UserName;
-            _password = rabbitMqOptions.Value.Password;
-
+            _hostname = "localhost"; //rabbitMqOptions.Value.Hostname;
+            _username = "user"; //rabbitMqOptions.Value.UserName;
+            _password = "password";//rabbitMqOptions.Value.Password;
+            _logger = logger;
             CreateConnection();
         }
         public void SendBanco(Banco banco)
         {
             if (ConnectionExists())
             {
-                using (var channel = _connection.CreateModel())
+                try
                 {
-                    channel.QueueDeclare(queue: _queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+                   
+                    using (var channel = _connection.CreateModel())
+                    {
+                        channel.QueueDeclare(queue: _queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
 
-                    var json = JsonConvert.SerializeObject(banco);
-                    var body = Encoding.UTF8.GetBytes(json);
+                        var json = JsonConvert.SerializeObject(banco);
+                        var body = Encoding.UTF8.GetBytes(json);
 
-                    channel.BasicPublish(exchange: "", routingKey: _queueName, basicProperties: null, body: body);
+                        channel.BasicPublish(exchange: "", routingKey: _queueName, basicProperties: null, body: body);
+                        _logger.LogInformation("Enviado para fila");
+                    }
                 }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Erro ao Tentar enviar para fila:{ex.Message}");
+
+                }
+            }
+            else
+            {
+                _logger.LogInformation($"Conexão não está ativa.");
+
             }
         }
         private void CreateConnection()
         {
             try
             {
+                _logger.LogInformation("Tentando criar conexão da fila com seguinte informações");
+                _logger.LogInformation($"hostname:{_hostname}");
+                _logger.LogInformation($"user:{_username}");
+                _logger.LogInformation($"password:{_password}"); 
                 var factory = new ConnectionFactory
                 {
-                    HostName = "localhost",
-                    UserName = "user",
-                    Password = "password"
+                    HostName = _hostname,
+                    UserName = _username,
+                    Password = _password
                 };
                 _connection = factory.CreateConnection();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Could not create connection: {ex.Message}");
+                _logger.LogError($"Erro criar conexão da fila:{ex.Message}");
+
             }
         }
 

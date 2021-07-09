@@ -30,10 +30,15 @@ namespace BancoApi.Service.Receiver
             IOptions<RabbitMqConfiguration> rabbitMqOptions,
             ILogger<BancoCreateReceiver> logger)
         {
-            _hostname = rabbitMqOptions.Value.Hostname;
+            //_hostname = rabbitMqOptions.Value.Hostname;
+            //_queueName = "BancoQueue"; //rabbitMqOptions.Value.QueueName;
+            //_username = rabbitMqOptions.Value.UserName;
+            //_password = rabbitMqOptions.Value.Password;
             _queueName = "BancoQueue"; //rabbitMqOptions.Value.QueueName;
-            _username = rabbitMqOptions.Value.UserName;
-            _password = rabbitMqOptions.Value.Password;
+            _hostname = "localhost"; //rabbitMqOptions.Value.Hostname;
+            _username = "user"; //rabbitMqOptions.Value.UserName;
+            _password = "password"; //rabbitMqOptions.Value.Password;
+
             _logger = logger;
             Services = services;
 
