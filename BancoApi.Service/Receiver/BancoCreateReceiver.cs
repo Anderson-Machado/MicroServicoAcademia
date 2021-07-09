@@ -81,12 +81,12 @@ namespace BancoApi.Service.Receiver
         {
             try
             {  //tiver problemas de scopo para o repositório.
-               //resolvido com o link:
+               //resolvido conforme indicação do link:
                //https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-3.1&tabs=visual-studio#consuming-a-scoped-service-in-a-background-task
                 using (var scope = Services.CreateScope())
                 {
                     _logger.LogWarning($"Recuperando informações da fila e inserindo BD. Banco:{banco.Nome.ToUpper()}");
-                   var scopedProcessingService = scope.ServiceProvider.GetRequiredService<IBancoRepository>();
+                    var scopedProcessingService = scope.ServiceProvider.GetRequiredService<IBancoRepository>();
                     await scopedProcessingService.AddAsync(banco);
                 }
             }
