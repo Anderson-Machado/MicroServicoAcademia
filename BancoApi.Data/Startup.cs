@@ -13,8 +13,7 @@ namespace BancoApi.Data
     {
         public static IServiceCollection AddInfraDataIoC(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped<IBancoRepository, BancoRepository>();
+
             services.AddDbContext<BancoDbContext>(options =>
                options.UseSqlServer(
                    DatabaseConnection.ConnectionConfiguration
@@ -29,10 +28,12 @@ namespace BancoApi.Data
                        sqlOptions.EnableRetryOnFailure(
 
                            maxRetryCount: 10,
-                           maxRetryDelay: TimeSpan.FromSeconds(30),
+                           maxRetryDelay: TimeSpan.FromSeconds(130),
                            errorNumbersToAdd: null);
                    }
                    ));
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IBancoRepository, BancoRepository>();
 
             return services;
         }

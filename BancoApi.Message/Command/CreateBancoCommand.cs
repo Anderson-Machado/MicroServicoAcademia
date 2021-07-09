@@ -1,7 +1,7 @@
 ﻿using BancoApi.Domain;
 using MediatR;
 
-namespace BancoApi.Service.Command
+namespace BancoApi.Message.Command
 {
     public class CreateBancoCommand : IRequest<Banco>
     {

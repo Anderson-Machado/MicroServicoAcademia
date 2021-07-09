@@ -72,12 +72,12 @@ namespace BancoApi.Controllers
 
             try
             {
-                 await _mediator.Send(new CreateBancoMessageCommand
+                await _mediator.Send(new CreateBancoMessageCommand
                 {
-                  Bancos = banco
+                    Bancos = banco
                 });
 
-                return Ok();
+                return Ok(banco);
             }
             catch (Exception ex)
             {

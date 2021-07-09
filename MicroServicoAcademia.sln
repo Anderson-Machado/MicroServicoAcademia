@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BancoApi.Data", "BancoApi.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BancoApi.Service", "BancoApi.Service\BancoApi.Service.csproj", "{C9129112-5DC8-4FC2-8A61-BF573C0A6D1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BancoApi.Message", "BancoApi.Message\BancoApi.Message.csproj", "{635E005A-B439-4430-952C-7EE7659E02D2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,10 +35,6 @@ Global
 		{C9129112-5DC8-4FC2-8A61-BF573C0A6D1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9129112-5DC8-4FC2-8A61-BF573C0A6D1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9129112-5DC8-4FC2-8A61-BF573C0A6D1B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{635E005A-B439-4430-952C-7EE7659E02D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{635E005A-B439-4430-952C-7EE7659E02D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{635E005A-B439-4430-952C-7EE7659E02D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{635E005A-B439-4430-952C-7EE7659E02D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,7 +44,6 @@ Global
 		{CB983E96-1885-4237-B892-9358822CDD98} = {F533A9FE-8B5B-435D-98F1-94450D03ED1F}
 		{CA48AD3E-B550-4F1C-9F9F-72B0304C07A0} = {F533A9FE-8B5B-435D-98F1-94450D03ED1F}
 		{C9129112-5DC8-4FC2-8A61-BF573C0A6D1B} = {F533A9FE-8B5B-435D-98F1-94450D03ED1F}
-		{635E005A-B439-4430-952C-7EE7659E02D2} = {F533A9FE-8B5B-435D-98F1-94450D03ED1F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E9ADF5F-F5F5-42D9-8D9F-8D5EAA4A7F75}

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
-namespace BancoApi.Message.Send
+namespace BancoApi.Service.Send
 {
     public class BancoCreateSender : IBancoCreateSender
     {
@@ -20,7 +20,7 @@ namespace BancoApi.Message.Send
 
         public BancoCreateSender(IOptions<RabbitMqConfiguration> rabbitMqOptions)
         {
-            _queueName = rabbitMqOptions.Value.QueueName;
+            _queueName = "BancoQueue"; //rabbitMqOptions.Value.QueueName;
             _hostname = rabbitMqOptions.Value.Hostname;
             _username = rabbitMqOptions.Value.UserName;
             _password = rabbitMqOptions.Value.Password;
@@ -48,9 +48,9 @@ namespace BancoApi.Message.Send
             {
                 var factory = new ConnectionFactory
                 {
-                    HostName = _hostname,
-                    UserName = _username,
-                    Password = _password
+                    HostName = "localhost",
+                    UserName = "user",
+                    Password = "password"
                 };
                 _connection = factory.CreateConnection();
             }

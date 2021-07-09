@@ -1,6 +1,6 @@
 ﻿using BancoApi.Domain;
 
-namespace BancoApi.Message.Send
+namespace BancoApi.Service.Send
 {
     public interface IBancoCreateSender
     {

@@ -1,10 +1,5 @@
-﻿using BancoApi.Domain;
-using BancoApi.Message.Send;
+﻿using BancoApi.Service.Send;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,14 +20,6 @@ namespace BancoApi.Service.Command
             _bancoMessage.SendBanco(request.Bancos);
             return Unit.Task;
         }
-
-        //public Task<Banco> Handle(CreateBancoMessageCommand request, CancellationToken cancellationToken)
-        //{
-        //    _bancoMessage.SendBanco(request.Bancos);
-        //    return null;
-        //}
-
-
 
     }
 }

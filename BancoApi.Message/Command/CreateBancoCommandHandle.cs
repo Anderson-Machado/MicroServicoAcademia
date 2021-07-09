@@ -4,7 +4,7 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BancoApi.Service.Command
+namespace BancoApi.Message.Command
 {
     public class CreateBancoCommandHandle : IRequestHandler<CreateBancoCommand, Banco>
     {
