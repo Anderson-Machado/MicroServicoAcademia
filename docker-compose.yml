@@ -29,22 +29,20 @@ services:
             - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
         networks:
           - banco-network
-    # bancoapi:
-    #     container_name: bancoapi
-    #     build: 
-    #      context: .
-    #      dockerfile: Dockerfile
-    #     ports:
-    #         - 8000:80
-    #         - 8001:443
-    #     environment : 
-    #      - ASPNETCORE_ENVIRONMENT=Development
-    #     restart: on-failure 
-    #     networks: 
-    #       - banco-network       
-    #     depends_on:
-    #         - rabbitmq
-    #         - db
+    bancoapi:
+        container_name: bancoapi
+        build: 
+         context: .
+         dockerfile: Dockerfile
+        ports:
+            - 8000:80
+            - 8001:443
+        restart: on-failure 
+        networks: 
+          - banco-network       
+        depends_on:
+            - rabbitmq
+            - db
 networks:
   banco-network:
     driver: bridge

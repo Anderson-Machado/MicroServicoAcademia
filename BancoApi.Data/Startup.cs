@@ -13,7 +13,6 @@ namespace BancoApi.Data
     {
         public static IServiceCollection AddInfraDataIoC(this IServiceCollection services)
         {
-
             services.AddDbContext<BancoDbContext>(options =>
                options.UseSqlServer(
                    DatabaseConnection.ConnectionConfiguration
@@ -48,6 +47,7 @@ namespace BancoApi.Data
                 IConfigurationRoot Configuration = new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("appsettings.json")
+                    .AddJsonFile("appsettings.Development.json")
                     .Build();
                 return Configuration;
             }

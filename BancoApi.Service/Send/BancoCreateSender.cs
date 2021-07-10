@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace BancoApi.Service.Send
 {
@@ -19,13 +20,16 @@ namespace BancoApi.Service.Send
         private readonly string _username;
         private IConnection _connection;
         private readonly ILogger<BancoCreateSender> _logger;
+        private readonly IConfiguration _config;
 
-        public BancoCreateSender(IOptions<RabbitMqConfiguration> rabbitMqOptions, ILogger<BancoCreateSender> logger)
+        public BancoCreateSender( ILogger<BancoCreateSender> logger, IConfiguration config)
         {
-            _queueName = "BancoQueue"; //rabbitMqOptions.Value.QueueName;
-            _hostname = "localhost"; //rabbitMqOptions.Value.Hostname;
-            _username = "user"; //rabbitMqOptions.Value.UserName;
-            _password = "password";//rabbitMqOptions.Value.Password;
+            _config = config;
+         
+            _queueName = "BancoQueue"; 
+            _hostname = config.GetSection("RabbitMq:Hostname").Value == "localhost" ? "localhost": "172.18.0.3"; 
+            _username = config.GetSection("RabbitMq:UserName").Value == "user"?"user":"user"; 
+            _password = config.GetSection("RabbitMq:Hostname").Value == "Password"? "password": "password";
             _logger = logger;
             CreateConnection();
         }

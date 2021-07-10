@@ -33,7 +33,7 @@ namespace BancoApi
 
             var serviceClientSettingsConfig = Configuration.GetSection("RabbitMq");
             var serviceClientSettings = serviceClientSettingsConfig.Get<RabbitMqConfiguration>();
-
+            
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.InvalidModelStateResponseFactory = actionContext =>
@@ -69,6 +69,7 @@ namespace BancoApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BancoApi v1"));
             }
+            
 
             app.UseHttpsRedirection();
 

@@ -1,5 +1,6 @@
 ﻿using BancoApi.Domain;
 using BancoApi.Domain.Interfaces.Repository;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -23,21 +24,20 @@ namespace BancoApi.Service.Receiver
         private readonly string _username;
         private readonly string _password;
         private readonly ILogger<BancoCreateReceiver> _logger;
+        private readonly IConfiguration _config;
         public IServiceProvider Services { get; }
 
         public BancoCreateReceiver(
             IServiceProvider services,
-            IOptions<RabbitMqConfiguration> rabbitMqOptions,
-            ILogger<BancoCreateReceiver> logger)
+            IConfiguration config,
+        ILogger<BancoCreateReceiver> logger)
         {
-            //_hostname = rabbitMqOptions.Value.Hostname;
-            //_queueName = "BancoQueue"; //rabbitMqOptions.Value.QueueName;
-            //_username = rabbitMqOptions.Value.UserName;
-            //_password = rabbitMqOptions.Value.Password;
-            _queueName = "BancoQueue"; //rabbitMqOptions.Value.QueueName;
-            _hostname = "localhost"; //rabbitMqOptions.Value.Hostname;
-            _username = "user"; //rabbitMqOptions.Value.UserName;
-            _password = "password"; //rabbitMqOptions.Value.Password;
+            _config = config;
+            
+            _queueName = "BancoQueue"; 
+            _hostname = config.GetSection("RabbitMq:Hostname").Value == "localhost" ? "localhost" : "172.18.0.3"; 
+            _username = config.GetSection("RabbitMq:UserName").Value == "user" ? "user" : "user"; 
+            _password = config.GetSection("RabbitMq:Hostname").Value == "Password" ? "password" : "password"; 
 
             _logger = logger;
             Services = services;
@@ -48,9 +48,9 @@ namespace BancoApi.Service.Receiver
         {
             var factory = new ConnectionFactory
             {
-                HostName = "localhost",
-                UserName = "user",
-                Password = "password"
+                HostName = _hostname,
+                UserName = _username,
+                Password = _password
             };
 
             _connection = factory.CreateConnection();
