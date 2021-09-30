@@ -1,5 +1,6 @@
 ﻿using BancoApi.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace BancoApi.Data.Database
 {
@@ -43,8 +44,13 @@ namespace BancoApi.Data.Database
         }
         public DbSet<Banco> Bancos { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder dbContextOptionsBuilder)
         {
+            if (!dbContextOptionsBuilder.IsConfigured)
+            {
+                dbContextOptionsBuilder.UseSqlServer(
+                    DatabaseConnection.ConnectionConfiguration.GetConnectionString("DbConnection"));
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

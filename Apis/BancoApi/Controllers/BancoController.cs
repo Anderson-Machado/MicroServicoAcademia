@@ -72,17 +72,26 @@ namespace BancoApi.Controllers
 
             try
             {
-                return await _mediator.Send(new CreateBancoCommand
+                _logger.LogInformation("passando pela controller para enviar para a fila");
+               await _mediator.Send(new CreateBancoMessageCommand
                 {
                     Bancos = banco
                 });
+
+                return Created("",banco);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
 
+        [HttpGet("teste")]
+        public ActionResult Teste()
+        {
+            return Ok("vai vendo");
+        }
 
     }
 

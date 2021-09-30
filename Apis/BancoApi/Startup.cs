@@ -1,15 +1,15 @@
-using BancoApi.Data;
-using BancoApi.Domain;
-using BancoApi.Service.Command;
-using BancoApi.Service.Query;
-using MediatR;
+using BancoApi.Healthchecks;
+using BancoApi.Service;
+using BancoApi.Service.Configurations;
+using BancoApi.Service.Receiver;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using System.Collections.Generic;
 
 namespace BancoApi
 {
@@ -25,19 +25,42 @@ namespace BancoApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            //services.AddHealthChecks();
+            services.AddOptions();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BancoApi", Version = "v1" });
             });
-            services.AddMediatR(typeof(Startup));
-            services.AddInfraDataIoC();
-            services.AddTransient<IRequestHandler<CreateBancoCommand, Banco>, CreateBancoCommandHandle>();
-            services.AddTransient<IRequestHandler<GetBancoByIdQuery, Banco>, GetBancoByIdQueryHandle>();
-            services.AddTransient<IRequestHandler<GetBancoAllQuery, List<Banco>>, GetBancoAllQueryHandle>();
 
+            var serviceClientSettingsConfig = Configuration.GetSection("RabbitMqConfiguration");
+            var serviceClientSettings = serviceClientSettingsConfig.Get<RabbitMqConfiguration>();
+            
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = actionContext =>
+                {
+                    var actionExecutingContext =
+                        actionContext as ActionExecutingContext;
 
+                    if (actionContext.ModelState.ErrorCount > 0
+                        && actionExecutingContext?.ActionArguments.Count == actionContext.ActionDescriptor.Parameters.Count)
+                    {
+                        return new UnprocessableEntityObjectResult(actionContext.ModelState);
+                    }
+
+                    return new BadRequestObjectResult(actionContext.ModelState);
+                };
+            });
+
+            //services.AddMediatR(typeof(Startup));
+            services.AddServiceIoC(Configuration);
+            services.AddCustomHealthchecks();
+
+            if (serviceClientSettings.Enable)
+            {
+                services.AddHostedService<BancoCreateReceiver>();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +72,7 @@ namespace BancoApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BancoApi v1"));
             }
+            
 
             app.UseHttpsRedirection();
 
@@ -56,9 +80,13 @@ namespace BancoApi
 
             app.UseAuthorization();
 
+            app.UseHealthChecks();
+            app.UserHealthCheckUi();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/monitor");
             });
         }
     }

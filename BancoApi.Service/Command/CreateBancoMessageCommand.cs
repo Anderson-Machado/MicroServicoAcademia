@@ -3,7 +3,7 @@ using MediatR;
 
 namespace BancoApi.Service.Command
 {
-    public class CreateBancoCommand : IRequest<Banco>
+    public class CreateBancoMessageCommand : IRequest
     {
         public Banco Bancos { get; set; }
     }
