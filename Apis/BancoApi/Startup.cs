@@ -1,4 +1,6 @@
+using BancoApi.Healthchecks;
 using BancoApi.Service;
+using BancoApi.Service.Configurations;
 using BancoApi.Service.Receiver;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,7 +25,7 @@ namespace BancoApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHealthChecks();
+            //services.AddHealthChecks();
             services.AddOptions();
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -31,7 +33,7 @@ namespace BancoApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BancoApi", Version = "v1" });
             });
 
-            var serviceClientSettingsConfig = Configuration.GetSection("RabbitMq");
+            var serviceClientSettingsConfig = Configuration.GetSection("RabbitMqConfiguration");
             var serviceClientSettings = serviceClientSettingsConfig.Get<RabbitMqConfiguration>();
             
             services.Configure<ApiBehaviorOptions>(options =>
@@ -52,9 +54,10 @@ namespace BancoApi
             });
 
             //services.AddMediatR(typeof(Startup));
-            services.AddServiceIoC();
+            services.AddServiceIoC(Configuration);
+            services.AddCustomHealthchecks();
 
-            if (serviceClientSettings.Enabled)
+            if (serviceClientSettings.Enable)
             {
                 services.AddHostedService<BancoCreateReceiver>();
             }
@@ -77,10 +80,13 @@ namespace BancoApi
 
             app.UseAuthorization();
 
+            app.UseHealthChecks();
+            app.UserHealthCheckUi();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/health");
+                endpoints.MapHealthChecks("/monitor");
             });
         }
     }
