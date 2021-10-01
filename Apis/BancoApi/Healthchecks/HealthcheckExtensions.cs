@@ -81,8 +81,6 @@ namespace BancoApi.Healthchecks
             app.UseHealthChecksUI(options =>
             {
                 options.UIPath = "/monitor";
-               
-                
             });
         }
     }

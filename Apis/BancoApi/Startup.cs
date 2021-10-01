@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using FluentValidation.AspNetCore;
+using System.Globalization;
+using BancoApi.Filter;
 
 namespace BancoApi
 {
@@ -27,7 +30,18 @@ namespace BancoApi
         {
             //services.AddHealthChecks();
             services.AddOptions();
-            services.AddControllers();
+
+            services.AddControllers(opt=> {
+              opt.Filters.Add<ValidationFilter>();
+            })
+            .AddFluentValidation(fv =>
+            {
+                fv.RegisterValidatorsFromAssemblyContaining<Startup>();
+                fv.ValidatorOptions.LanguageManager.Culture = new CultureInfo("pt-BR");
+            })
+                
+                ;
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BancoApi", Version = "v1" });
@@ -35,9 +49,10 @@ namespace BancoApi
 
             var serviceClientSettingsConfig = Configuration.GetSection("RabbitMqConfiguration");
             var serviceClientSettings = serviceClientSettingsConfig.Get<RabbitMqConfiguration>();
-            
+
             services.Configure<ApiBehaviorOptions>(options =>
             {
+                options.SuppressModelStateInvalidFilter = true;
                 options.InvalidModelStateResponseFactory = actionContext =>
                 {
                     var actionExecutingContext =
@@ -72,7 +87,7 @@ namespace BancoApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BancoApi v1"));
             }
-            
+
 
             app.UseHttpsRedirection();
 
@@ -82,6 +97,7 @@ namespace BancoApi
 
             app.UseHealthChecks();
             app.UserHealthCheckUi();
+            
 
             app.UseEndpoints(endpoints =>
             {

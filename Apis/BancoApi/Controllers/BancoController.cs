@@ -55,36 +55,20 @@ namespace BancoApi.Controllers
             }
         }
 
-        /// <summary>
-        /// Action to create a new banco in the database.
-        /// </summary>
-        /// <param name="orderModel">Model to create a new order</param>
-        /// <returns>Returns the created order</returns>
-        /// <response code="201">Returned if the order was created</response>
-        /// <response code="400">Returned if the model couldn't be parsed or saved</response>
-        /// <response code="422">Returned when the validation failed</response>
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+
         [HttpPost]
+        [ProducesResponseType(typeof(Banco), StatusCodes.Status200OK)]
         public async Task<ActionResult<Banco>> Banco(Banco banco)
         {
 
-            try
+            _logger.LogInformation("passando pela controller para enviar para a fila");
+            await _mediator.Send(new CreateBancoMessageCommand
             {
-                _logger.LogInformation("passando pela controller para enviar para a fila");
-               await _mediator.Send(new CreateBancoMessageCommand
-                {
-                    Bancos = banco
-                });
+                Bancos = banco
+            });
 
-                return Created("",banco);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return BadRequest(ex.Message);
-            }
+            return Created("", banco);
+
         }
 
         [HttpGet("teste")]
