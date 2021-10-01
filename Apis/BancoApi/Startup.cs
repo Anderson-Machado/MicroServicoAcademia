@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using FluentValidation.AspNetCore;
 using System.Globalization;
 using BancoApi.Filter;
+using BancoApi.Middlewares;
 
 namespace BancoApi
 {
@@ -30,6 +31,7 @@ namespace BancoApi
         {
             //services.AddHealthChecks();
             services.AddOptions();
+            services.AddTransient<ErroMiddleware>();
 
             services.AddControllers(opt=> {
               opt.Filters.Add<ValidationFilter>();
@@ -92,11 +94,12 @@ namespace BancoApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseMiddleware<ErroMiddleware>();
             app.UseAuthorization();
 
             app.UseHealthChecks();
             app.UserHealthCheckUi();
+            
             
 
             app.UseEndpoints(endpoints =>

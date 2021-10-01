@@ -60,7 +60,7 @@ namespace BancoApi.Controllers
         [ProducesResponseType(typeof(Banco), StatusCodes.Status200OK)]
         public async Task<ActionResult<Banco>> Banco(Banco banco)
         {
-
+           
             _logger.LogInformation("passando pela controller para enviar para a fila");
             await _mediator.Send(new CreateBancoMessageCommand
             {

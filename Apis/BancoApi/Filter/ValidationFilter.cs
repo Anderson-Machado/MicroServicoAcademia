@@ -1,5 +1,5 @@
 ﻿
-using BancoApi.ProblemDetails;
+using BancoApi.ProblemDetail;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
@@ -24,11 +24,13 @@ namespace BancoApi.Filter
 
                 var validaTion = new CustomValidationProblemDetails()
                 {
-                    Title = "one or more errors occurred",
+                    Title = "one or more errors occurred.",
                     Errors = new Dictionary<string, ValidationProblemDetailsError>(errorsModelState),
                     Status = (int)HttpStatusCode.BadRequest,
                     TraceId = context.HttpContext.TraceIdentifier
                 };
+
+               
 
                 context.Result = new BadRequestObjectResult(validaTion);
                 return;
