@@ -30,8 +30,6 @@ namespace BancoApi.Filter
                     TraceId = context.HttpContext.TraceIdentifier
                 };
 
-               
-
                 context.Result = new BadRequestObjectResult(validaTion);
                 return;
             }
