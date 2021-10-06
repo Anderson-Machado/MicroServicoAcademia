@@ -6,6 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.3" />
+    <PackageReference Include="Refit" Version="6.0.94" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Enum\" />
   </ItemGroup>
 
 </Project>

@@ -14,6 +14,9 @@ using FluentValidation.AspNetCore;
 using System.Globalization;
 using BancoApi.Filter;
 using BancoApi.Middlewares;
+using BancoApi.Domain.Interfaces.Refit;
+using Refit;
+using System;
 
 namespace BancoApi
 {
@@ -33,6 +36,10 @@ namespace BancoApi
             services.AddOptions();
             services.AddTransient<ErroMiddleware>();
 
+            services.AddRefitClient<IPostalCode>()
+                    .ConfigureHttpClient(c => 
+                    c.BaseAddress = new Uri("https://viacep.com.br/ws"));
+
             services.AddControllers(opt=> {
               opt.Filters.Add<ValidationFilter>();
             })
@@ -40,9 +47,7 @@ namespace BancoApi
             {
                 fv.RegisterValidatorsFromAssemblyContaining<Startup>();
                 fv.ValidatorOptions.LanguageManager.Culture = new CultureInfo("pt-BR");
-            })
-                
-                ;
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -78,6 +83,9 @@ namespace BancoApi
             {
                 services.AddHostedService<BancoCreateReceiver>();
             }
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
