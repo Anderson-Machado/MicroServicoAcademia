@@ -9,4 +9,9 @@ namespace BancoApi.Domain
 
         public DateTime DataNascimento { get; set; }
     }
+
+    public class Pessoa
+    {
+        public string Nome { get; set; }
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Net;
@@ -10,6 +11,13 @@ namespace BancoApi.Middlewares
 {
     public class ErroMiddleware : IMiddleware
     {
+        private readonly ILogger<ErroMiddleware> _logger;
+
+        public ErroMiddleware(ILogger<ErroMiddleware> logger)
+        {
+            _logger = logger;
+        }
+
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
@@ -18,6 +26,7 @@ namespace BancoApi.Middlewares
             }
             catch (Exception ex)
             {
+                _logger.LogError($"Caraiii neguim, deu erro: {ex.Message}");
                 HandleExceptionAsync(context, ex);
             }
         }
