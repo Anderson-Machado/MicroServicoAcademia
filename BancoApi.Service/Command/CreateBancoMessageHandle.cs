@@ -9,7 +9,6 @@ namespace BancoApi.Service.Command
     {
         private readonly IBancoCreateSender _bancoMessage;
 
-
         public CreateBancoMessageHandle(IBancoCreateSender bancoMessage)
         {
             _bancoMessage = bancoMessage;
@@ -17,11 +16,11 @@ namespace BancoApi.Service.Command
 
         public Task<Unit> Handle(CreateBancoMessageCommand request, CancellationToken cancellationToken)
         {
-            var sapo = 25 / request.Bancos.Id;
-
             _bancoMessage.SendBanco(request.Bancos);
             return Unit.Task;
         }
 
     }
 }
+
+//AutoFixture

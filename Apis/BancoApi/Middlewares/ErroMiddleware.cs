@@ -27,7 +27,7 @@ namespace BancoApi.Middlewares
             catch (Exception ex)
             {
                 _logger.LogError($"Caraiii neguim, deu erro: {ex.Message}");
-                HandleExceptionAsync(context, ex);
+               await HandleExceptionAsync(context, ex);
             }
         }
 
