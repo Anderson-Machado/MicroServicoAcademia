@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace BancoApi.ProblemDetail
+namespace BancoApi.Service.ProblemDetail
 {
     public class CustomValidationProblemDetails
     {
@@ -15,6 +12,6 @@ namespace BancoApi.ProblemDetail
 
         public string TraceId { get; set; }
 
-        public IDictionary<string, ValidationProblemDetailsError> Errors { get; set; }
+        public IDictionary<string, List<ValidationProblemDetailsError>> Errors { get; set; }
     }
 }

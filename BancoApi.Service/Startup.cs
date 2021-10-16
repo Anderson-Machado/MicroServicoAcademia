@@ -2,6 +2,7 @@
 using BancoApi.Domain;
 using BancoApi.Service.Command;
 using BancoApi.Service.Configurations;
+using BancoApi.Service.Notification;
 using BancoApi.Service.Query;
 using BancoApi.Service.Send;
 using MediatR;
@@ -23,6 +24,7 @@ namespace BancoApi.Service
             services.AddTransient<IRequestHandler<GetBancoAllQuery, List<Banco>>, GetBancoAllQueryHandle>();
 
             services.AddTransient<IBancoCreateSender, BancoCreateSender>();
+            services.AddScoped<IApiNotification, ApiNotification>();
             //options Pattern
             //install Package Microsoft.Extensions.options
             services.Configure<RabbitMqConfiguration>(configuration.GetSection(RabbitMqConfiguration.BaseConfig));

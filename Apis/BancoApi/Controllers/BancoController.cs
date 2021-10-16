@@ -1,5 +1,6 @@
 ﻿using BancoApi.Domain;
 using BancoApi.Service.Command;
+using BancoApi.Service.Notification;
 using BancoApi.Service.Query;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -17,11 +18,14 @@ namespace BancoApi.Controllers
     {
         private readonly ILogger<BancoController> _logger;
         private readonly IMediator _mediator;
+        private readonly IApiNotification _apiNotification;
 
-        public BancoController(ILogger<BancoController> logger, IMediator mediator)
+        public BancoController(ILogger<BancoController> logger, IMediator mediator, IApiNotification apiNotification)
         {
             _logger = logger;
             _mediator = mediator;
+            _apiNotification = apiNotification;
+            
         }
 
         [HttpGet("{id}")]
@@ -67,6 +71,10 @@ namespace BancoApi.Controllers
                 Bancos = banco
             });
 
+            if (_apiNotification.HasNotifications())
+            {
+                return BadRequest(_apiNotification.GetProblemDetail());
+            }
             return Created("", banco);
 
         }

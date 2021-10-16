@@ -1,4 +1,6 @@
+using BancoApi.Domain.Interfaces.Refit;
 using BancoApi.Healthchecks;
+using BancoApi.Middlewares;
 using BancoApi.Service;
 using BancoApi.Service.Configurations;
 using BancoApi.Service.Receiver;
@@ -10,11 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using FluentValidation.AspNetCore;
-using System.Globalization;
-using BancoApi.Filter;
-using BancoApi.Middlewares;
-using BancoApi.Domain.Interfaces.Refit;
 using Refit;
 using System;
 
@@ -37,17 +34,15 @@ namespace BancoApi
             services.AddTransient<ErroMiddleware>();
 
             services.AddRefitClient<IPostalCode>()
-                    .ConfigureHttpClient(c => 
+                    .ConfigureHttpClient(c =>
                     c.BaseAddress = new Uri("https://viacep.com.br/ws"));
 
-            services.AddControllers(opt=> {
-              opt.Filters.Add<ValidationFilter>();
-            })
-            .AddFluentValidation(fv =>
-            {
-                fv.RegisterValidatorsFromAssemblyContaining<Startup>();
-                fv.ValidatorOptions.LanguageManager.Culture = new CultureInfo("pt-BR");
-            });
+            services.AddControllers();
+            //.AddFluentValidation(fv =>
+            //{
+            //    fv.RegisterValidatorsFromAssemblyContaining<Startup>();
+            //    fv.ValidatorOptions.LanguageManager.Culture = new CultureInfo("pt-BR");
+            //});
 
             services.AddSwaggerGen(c =>
             {
@@ -107,8 +102,8 @@ namespace BancoApi
 
             app.UseHealthChecks();
             app.UserHealthCheckUi();
-            
-            
+
+
 
             app.UseEndpoints(endpoints =>
             {
