@@ -6,57 +6,43 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace BancoApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class BancoController : ControllerBase
+    public class BancoController : MainController
     {
         private readonly ILogger<BancoController> _logger;
         private readonly IMediator _mediator;
-        private readonly IApiNotification _apiNotification;
 
-        public BancoController(ILogger<BancoController> logger, IMediator mediator, IApiNotification apiNotification)
+
+        public BancoController(ILogger<BancoController> logger, IMediator mediator,
+            IApiNotification apiNotification,IHttpContextAccessor httpContext) 
+            : base(apiNotification,httpContext)
         {
             _logger = logger;
             _mediator = mediator;
-            _apiNotification = apiNotification;
-            
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Banco>> Get(int id)
         {
-            try
+
+            return CustomResponse(HttpStatusCode.OK, await _mediator.Send(new GetBancoByIdQuery
             {
-                return await _mediator.Send(new GetBancoByIdQuery
-                {
-                    Id = id
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return BadRequest(ex.Message);
-            }
+                Id = id
+            }));
+
         }
 
         [HttpGet]
         public async Task<ActionResult<List<Banco>>> GetAll(int id)
         {
-            try
-            {
-                return await _mediator.Send(new GetBancoAllQuery());
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return BadRequest(ex.Message);
-            }
+            return CustomResponse(HttpStatusCode.OK, await _mediator.Send(new GetBancoAllQuery()));
         }
 
 
@@ -64,18 +50,13 @@ namespace BancoApi.Controllers
         [ProducesResponseType(typeof(Banco), StatusCodes.Status200OK)]
         public async Task<ActionResult<Banco>> Banco(Banco banco)
         {
-           
+
             _logger.LogInformation("passando pela controller para enviar para a fila");
             await _mediator.Send(new CreateBancoMessageCommand
             {
                 Bancos = banco
             });
-
-            if (_apiNotification.HasNotifications())
-            {
-                return BadRequest(_apiNotification.GetProblemDetail());
-            }
-            return Created("", banco);
+            return CustomResponse(HttpStatusCode.Created, banco);
 
         }
 

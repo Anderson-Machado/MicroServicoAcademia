@@ -36,7 +36,7 @@ namespace BancoApi
             services.AddRefitClient<IPostalCode>()
                     .ConfigureHttpClient(c =>
                     c.BaseAddress = new Uri("https://viacep.com.br/ws"));
-
+            services.AddHttpContextAccessor();
             services.AddControllers();
             //.AddFluentValidation(fv =>
             //{
