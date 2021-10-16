@@ -1,50 +1,17 @@
-version: "3.6"
+version: "3.2"
 services:
-    db:
-       image: "mcr.microsoft.com/mssql/server:2017-latest"
-       container_name: 'mssql'
-       environment:
-         - ACCEPT_EULA=Y
-         - SA_PASSWORD=1Secure*Password1
-         
-       ports:
-         - 1433:1433
-       networks: 
-         - banco-network 
-    #    volumes:
-    #      - data:/var/opt/mssql/data
-    #      - ./scripts/scripts
-    #      - BancoApi.Data/script/init.sql:/docker-entrypoint-initdb.d/init.sql
-          
-    rabbitmq:
-        image: rabbitmq:3-management-alpine
-        container_name: 'rabbitmq'
-        ports:
-            - 5672:5672
-            - 15672:15672
-        environment:
-            - RABBITMQ_DEFAULT_USER=user
-            - RABBITMQ_DEFAULT_PASS=password 
-        volumes:
-            - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-            - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
-        networks:
-          - banco-network
-    bancoapi:
-        container_name: bancoapi
-        build: 
-         context: .
-         dockerfile: Dockerfile
-        ports:
-            - 8000:80
-            - 8001:443
-        restart: on-failure 
-        networks: 
-          - banco-network       
-        depends_on:
-            - rabbitmq
-            - db
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+        - rabbitmq_go_net
+
 networks:
-  banco-network:
+  rabbitmq_go_net:
     driver: bridge
-    

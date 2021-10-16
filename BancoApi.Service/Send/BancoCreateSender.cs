@@ -52,7 +52,9 @@ namespace BancoApi.Service.Send
             }
             else
             {
+
                 _logger.LogInformation($"Conexão não está ativa.");
+                throw new Exception("Conexão não está ativa.");
 
             }
         }
