@@ -1,6 +1,6 @@
-﻿using BancoApi.Service.Notification;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NotificationToAPI.Notification;
 using System;
 using System.Collections.Generic;
 using System.Linq;

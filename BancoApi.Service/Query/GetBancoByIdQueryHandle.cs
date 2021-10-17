@@ -1,12 +1,8 @@
 ﻿using BancoApi.Domain;
 using BancoApi.Domain.Interfaces.Repository;
-using BancoApi.Service.Notification;
 using FluentValidation;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using NotificationToAPI.Notification;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +11,7 @@ namespace BancoApi.Service.Query
     public class GetBancoByIdQueryHandle : IRequestHandler<GetBancoByIdQuery, Banco>
     {
         private readonly IBancoRepository _bancoRepository;
-        private readonly IApiNotification _apiNotification; 
+        private readonly IApiNotification _apiNotification;
 
         public GetBancoByIdQueryHandle(IBancoRepository bancoRepository, IApiNotification apiNotification)
         {

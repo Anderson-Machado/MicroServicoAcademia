@@ -1,11 +1,11 @@
 ﻿using BancoApi.Domain;
 using BancoApi.Service.Command;
-using BancoApi.Service.Notification;
 using BancoApi.Service.Query;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using NotificationToAPI.Notification;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;

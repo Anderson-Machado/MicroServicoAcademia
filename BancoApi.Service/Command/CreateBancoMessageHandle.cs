@@ -1,7 +1,7 @@
 ﻿using BancoApi.Domain.Validation;
-using BancoApi.Service.Notification;
 using BancoApi.Service.Send;
 using MediatR;
+using NotificationToAPI.Notification;
 using System.Threading;
 using System.Threading.Tasks;
 
